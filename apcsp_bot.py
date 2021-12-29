@@ -1,15 +1,7 @@
-# **Version 1.0.0**
-# **Note dict and pyignore are required modules for this file to run. **
-# **I will release the dict module on request as it is just functions and object definitions that crowd the main file, but for security reasons I will not release pyignore. **
-# **Other required dependencies (modules) that do not come included with standard installations of python3 include, discord.py, mysql.connector, and *pytz. **
-# *pytz does not come installed with some installations of python3 to check run your command for python in the terminal along with '-m pip install pytz'. If you have this dependency installed pip will indicate that you have it installed, otherwise it should install for you. *
-
-from logging import error
 import discord
 import random
 import time
 from discord.errors import NotFound
-from discord.utils import get
 import pytz
 import dict
 import pyignore
@@ -211,13 +203,13 @@ def db_authChannels_byregion(region):
 #Defining the differnt ranomized messaged for different people and general compliments
 def nice_message(userid):
     #person1
-    if userid == 614188961216200752:
+    if userid == 1:
         return random.choice(dict.user_msg_person1)
     #person2
-    elif userid == 756176803462119476:
+    elif userid == 1:
         return random.choice(dict.user_msg_person2)
     #person3
-    elif userid == 338375504405069824:
+    elif userid == 1:
         return random.choice(dict.user_msg_person3)
     else:
         return random.choice(dict.general_compliment)
@@ -561,7 +553,7 @@ async def auth(ctx, arg1):
         return
     l = ["cst", "est", "pst"]
     if arg1.lower() in l:
-        insert_authChannels(ctx.message.channel.id, arg1)
+        insert_authChannels(ctx.message.channel.id, arg1.lower())
         await ctx.send(embed=dict.embed_a("Success!", f"{ctx.message.channel.name} is now an authorized channel!\n\nYou have selected {arg1.upper()} as your timezone, to change this please use the command **authtz** in the authorized channel."))
     else: 
         await ctx.send(embed=dict.cmd_error("Please enter a valid region!\n\nCurrently supported regions are:\nCST (Central Standard Time *USA*)\nPST (Pacific Standard Time *USA*)\nEST (Eastern Standard Time *USA*)"))
@@ -591,12 +583,12 @@ async def authtz(ctx, arg1):
     if ctx.author.id in banned_user():
         await ctx.send(embed=dict.cmd_error(ban))
     l = ["cst", "est", "pst"]
-    if arg1 == get_authChannels_region(ctx.message.channel.id):
-        await ctx.send(embed=dict.cmd_error(f"This authorized channel has already been set to {arg1} region!"))
+    if arg1.lower() == get_authChannels_region(ctx.message.channel.id):
+        await ctx.send(embed=dict.cmd_error(f"This authorized channel has already been set to {arg1.lower()} region!"))
         return
     elif ctx.message.channel.id in db_authChannels() and arg1.lower() in l:
-        update_authChannels(arg1, ctx.message.channel.id)
-        await ctx.send(embed=dict.embed_a("Success!", f"{ctx.message.channel.name}'s region has been changed from {get_authChannels_region(ctx.message.channel.id)} to {arg1}"))
+        update_authChannels(arg1.lower(), ctx.message.channel.id)
+        await ctx.send(embed=dict.embed_a("Success!", f"{ctx.message.channel.name}'s region has been changed from {get_authChannels_region(ctx.message.channel.id)} to {arg1.lower()}"))
     elif arg1.lower() in l is False:
         await ctx.send(embed=dict.cmd_error(""))
     else: 
