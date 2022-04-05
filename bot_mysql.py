@@ -1,7 +1,11 @@
 import mysql.connector
-import pyignore
+import os
+import json
 
 if __name__ != '__main__':
+
+    os.chdir(__file__.strip('apcsp_bot.py'))
+    data = json.load(open('ignore.json'))
 
     #Defining info to be pulled from MySQL database
     #Pulling all values from the BannedUser table and compiling in a list 
@@ -10,10 +14,10 @@ if __name__ != '__main__':
         def __init__(self,):
 
             self.mydb = mysql.connector.connect(
-            host= pyignore.host,
-            user= pyignore.user,
-            password= pyignore.password,
-            database= pyignore.database
+            host= data.get('host'),
+            user= data.get('user'),
+            password= data.get('password'),
+            database= data.get('database')
             )
 
             self.cursor = self.mydb.cursor()
@@ -178,3 +182,4 @@ if __name__ != '__main__':
             
 else:
     print('You cannot run this file!\nPlease run the apcsp_bot.py file!')
+    exit()
