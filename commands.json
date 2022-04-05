@@ -1,0 +1,88 @@
+{
+    "dm":[
+        "(*user*, *message*)",
+        "This command DM's a specific user a message of your choice.", 
+        "This command excepts two arguments, *user* and *message*.\n\n*user* can either be a mention of the user, or the users name, if they are already added to the dictionary.\n\n*message* has to be put in quotation marks if more than one word, emotes can be used if the bot is in the same server as the emotes origin."
+    ],
+    "dmrep":[
+        "(*user*, *message*)",
+        "Similar to the dm command except it repeats the message to the user until stopped with stop command.", 
+        "\nThis command excepts two arguments, *user* and *message*.\n\n*user* can either be a mention of the user, or the users name, if they are already added to the dictionary.\n\n*message* has to be put in quotation marks if more than one word, emotes can be used if the bot is in the same server as the emotes origin."
+    ],
+    "stop":[
+        "",
+        "Stops the repeated messages to user from the *dmrep* command.",
+        "\u200b"
+    ],
+    "addme":[
+        "(*name*)",
+        "If user is not defined in dictionary, this command can be used by a user to add them to the dictionary.",
+        "\nThis command accepts one argument, *name*\n\n*name* is the name you would like to be stored as in the dictionary."
+
+    ],
+    "addusr":[
+        "(*user* *name*)",
+        "If user who is now you is not defined in dictionary, this command can be used by user to add to dictionary", 
+        "\nThis command accepts two arguments, *user* and *name*\n\n*user* is the mention of the user you would like to add\n\n*name* is the name you would like the user to be to be stored as in the database."
+    ],
+    "ping":[
+        "",
+        "Sends 'pong' along with the bot's ping in milliseconds.",
+        "\u200b"
+    ],
+    "working":[
+        "",
+        "Are you working or not? (switch statement)", 
+        "If you are working it will add you to the database and if you are pinged it will send a message letting the person who pinged you know that you are working."
+    ],
+    "busy":[
+        "",
+        "Are you busy or not? (switch statement)", 
+        "If you are busy it will add you to the database and if you are pinged it will send a message letting the person who pinged you know that you are busy."
+    ],
+    "compliment":[
+        "",
+        "Sends a nice message to user based on user id.",
+        "\u200b"
+    ],
+    "cmdban":[
+        "(*user*)",
+        "Bans *user* from using bot commands.", 
+        "This command accepts one argument, *user*\n\n*user* is the mention of the user you would like to ban from using commands."
+    ],
+    "cmduban":[
+        "(*user*)",
+        "Unbans *user* from using bot commands.", 
+        "\nThis command accepts one argument, *user*\n\n*user* is the mention of the user you would like to unban from using commands."
+    ],
+    "info":[
+        "(*user*)",
+        "Sends the info of the mentioned user that has been stored in the database", 
+        "\nThis command accepts one argument, *user*\n\n*user* is the mention of the user you would like to get the name for."
+    ],
+    "editname":[
+        "(*name*)",
+        "Changes the current name for the user in the database to *name*.\n\nThis command only works for the user who uses the command, you are not allowed to change another users name.", 
+        "\nThis command accepts one argument, *name*\n\n*name* is the name you would like to be put in the database under your profile."
+    ],
+    "update":[
+        "",
+        "Sends the updated code to a list of channels that it is authorized to send to, can only be used by the author of the bot.",
+        "\u200b"
+    ],
+    "auth":[
+        "(*region*)",
+        "Use this command in a channel you would like to authorize so code updates will be sent periodically by the author.", 
+        "\nThis command accepts one argument, *region*\n\n*region* is the region you are located in so updates will send with the correct timestamp, the only regions that are currently supported are CST, PST, and EST."
+    ],
+    "authtz":[
+        "(*region*)",
+        "This command changes the region of an authorized channel.\nThis command can only be used on channels that have been authorized.", 
+        "\nThis command accepts one argument, *region*\n\n*region* is the region you are located in so updates will send with the correct timestamp, the only regions that are currently supported are CST, PST, and EST."
+    ],
+    "rmauth":[
+        "",
+        "This command removes authorization from an authorized channel.\nThis command can only be used on a previously authorized channel, it has no additional arguments.",
+        "\u200b"
+    ]
+}

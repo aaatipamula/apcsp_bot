@@ -5,7 +5,7 @@ A bot that does a lot of useless stuff in Discord.
 ## Project Info
 
 **Author**: Aniketh Aatipamula <br>
-**Project Start Date**: October 30 2021 <br>
+**Project Start Date**: October 30, 2021 <br>
 **Contributors**: N/A <br> <br>
 
 **Project Origin**: This project originated as something to submit to my digital portfoliio for AP Computer Science Principles. I have continued to work on and add to the project as I have come up with improvements and increased my knowledge of python. <br> <br> 
