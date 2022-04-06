@@ -17,45 +17,41 @@ A bot that does a lot of useless stuff in Discord.
 **Module Dependencies**: This project requires that a handful of non-standard python modules be installed. <br>
 This includes:
 - discord.py
-- *pytz
-- *mysql.connector
+- pytz
+- mysql-connector-python
 
-*While some installations of python3 come standard with these modules other installations may not. Use the pip python package manager to install these dependencies if you do not have them or are not sure you have them. The package manager will indicate if you have them installed or not. For more information on how to use pip to install depenencies use the python [pip docs](https://pip.pypa.io/en/stable/cli/pip_install/).
+
 
 ## Running This Project 
 
-I have no problems with people running this project. However, I am still working on the ability to easily run the project. For now the only way to run the project is to run is with slight modifications to the main file, the addition of a pyignore.py file, and by starting a MySQL server on the machine you intend to run the project on. 
+I have no problems with people running this project. It is easily self hosted with docker containers!
 
+**Inital Setup** <br> 
+Make sure you have Docker installed on your host, you can install it [here](https://docs.docker.com/get-docker/). <br><br>
+Clone the repo by running the following command in your terminal: <br>
 
-**Modifications to the Main File**: 
-- *Changing the command invoke prefix `client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None)`
-- Change UserId's in the  `nice_message` function 
-- Change the Bot Channel in `on_ready` function/event
-- Change the Error channel in the `on_command_error` function
-- *Changing the predefined compliment messages in the *dict.py* module <br> <br>
+```git clone https://github.com/aaatipamula/apcsp_bot``` <br>
 
-*These changes are optional and not required for the bot to operate properly.
+This will create a folder named `apcsp_bot` in your working directory. Navigate into that directory in your germinal and run `python3 ./src/setup.py` This will ask you for a handful of items including a Discord channel in a server that you would not mind the bot dumping messages in, your Discord user id, information on the MySQL server, and the bot token. <br><br>
+If you don't know how to get channel and user id's refer to [this](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-) discord faq. <br><br>
+If you don't have a MySQL server you would rather use, would rather use a docker container MySQL server, or don't know how to set a MySQL server up go ahead and skip inputting all those values by hitting `Enter`.<br><br>
+You can create a bot token by going to https://discord.com/developers/applications signing in, hitting `New Application` and typing in what you want the bot to be named. From there go to the `Bot` tab and hit `Add Bot` and hit `Yes`. If your token is displayed copy that and put it into the required field. If not you can reset your token and copy it in. The token only appears once before you cannot see it again so make sure to copy it down somewhere. <br><br>
 
-**Setting up the MySQL server**:
-I am working on creating a sql execute file that will create all the tables and databases necessary, however for now you have to make these tables yourself. <br> <br>
+From there you can build and run the container images by running each of these commands in succesion: <br>
+```
+sudo docker build -t bot -f ./scripts/Dockerfile_apcsp_bot . && sudo docker build -t bot-mysql -f ./scripts/Dockerfile_mysql .
 
-I highly suggest creating a fresh database for this project named **Discord** (case sensitive). You will need to create the following tables. The tables and column names are case sensitive. 
+sudo docker network bot-net
 
-- Create the Authchannels table with two columns named ChannelId and Region, ChannelId should contain the bigInt datatype and Region should contain the varchar datatype with a minimum of 3 characters.
-- Create the BannedUser table with one column named UserId, UserId should contain the bigInt data type.
-- Create the Busy table with one column named UserId, UserId should contain the bigInt data type.
-- Create the Working table with one column named UserId, UserId should contain the bigInt data type.
-- Create the UserInfo table with two columns named UserId and Name, UserId should contain the bigInt datatype and Name should contain the varchar datatype with as many characters as you would like to allow. <br> <br> 
+sudo docker run -it --name bot --network bot-net -d bot
 
-I could not find a good all-around source that would provide a comprehensive user guide to installing and setting up databases and tables in MySQL however I will link the [W3Schools.com](https://www.w3schools.com/mysql/default.asp) guide for MySQL as a place to get started. <br><br> 
+sudo docker cp ./src/data.json bot:/home/bot/apcsp_bot/
 
-**Creating the pyignore.py File**:
-There are a handful of variables that you need to define in this file. They are listed below.
-- *file* This is the filepath of the main document you want to be uploaded when the update option is selected on startup of the program. 
-- *host* This is the ip of the MySQL server, if the server is being hosted on the same machine, set this variable to "localhost".
-- *user* This is the user you want the program to access the MySQL database as.
-- *password* This is the password for the previously defined user.
-- *database* This is the name of the database that you have made for the bot to use. 
-- *token* This is the token string for the bot that you get when 
+sudo docker run -it --name bot-mysql --network bot-net -d bot-mysql
 
-As for how to get a token and create your own discord bot there is a [video](https://www.youtube.com/watch?v=nW8c7vT6Hl4) I reccomend that goes through all the inital stages of creating the developer application, getting your client token, and adding the bot to servers. Although the video is long and somewhat lenthy it goes over everything you would need to get started in depth. 
+sudo docker exec -it bot-mysql mysql -uroot -p < /home/sql_scripts/setup_database.sql
+
+sudo docker exec -it bot python3 ./apcsp_bot/apcsp_bot.py
+```
+
+The password for the mysql image is defaulted to `Chb4ug8h#d`
