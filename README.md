@@ -41,17 +41,17 @@ From there you can build and run the container images by running each of these c
 ```
 sudo docker build -t bot -f ./scripts/Dockerfile_apcsp_bot . && sudo docker build -t bot-mysql -f ./scripts/Dockerfile_mysql .
 
-sudo docker network bot-net
-
-sudo docker run -it --name bot --network bot-net -d bot
-
-sudo docker cp ./src/data.json bot:/home/bot/apcsp_bot/
+sudo docker network create bot-net
 
 sudo docker run -it --name bot-mysql --network bot-net -d bot-mysql
 
+sudo docker run -it --name bot --network bot-net -d bot
+
+sudo docker cp ./src/data.json bot:/home/bot/apcsp_bot/src/
+
 sudo docker exec -it bot-mysql mysql -uroot -p < /home/sql_scripts/setup_database.sql
 
-sudo docker exec -it bot python3 ./apcsp_bot/apcsp_bot.py
+sudo docker exec -it bot python3 apcsp_bot/src/apcsp_bot.py &
 ```
 
 The password for the mysql image is defaulted to `Chb4ug8h#d`
