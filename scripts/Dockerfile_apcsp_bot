@@ -10,6 +10,4 @@ RUN python3 -m pip install discord.py pytz mysql-connector-python
 
 RUN apk add git
 
-RUN chmod 001 /home/bot/startup.sh
-
 ENTRYPOINT git clone https://github.com/aaatipamula/apcsp_bot.git
