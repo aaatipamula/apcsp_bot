@@ -12,7 +12,7 @@ from datetime import datetime as dt
 from bot_mysql import MySQL_Server as db
 
 os.chdir(__file__.strip('apcsp_bot.py'))
-data = json.load(open('ignore.json'))
+data = json.load(open('data.json'))
 client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None)
 
 ban = "You are not allowed to use commands!"
@@ -21,7 +21,7 @@ ban = "You are not allowed to use commands!"
 @client.event
 async def on_ready():
     print('I am ready')
-    bot_channel = client.get_channel(914650069687492729)
+    bot_channel = client.get_channel(data.get('dump_channel'))
     await bot_channel.send("I Am Ready")
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="everyone all the time"))
 
@@ -472,7 +472,7 @@ async def on_command_error(ctx, error):
 
     else:
         print(error)
-        err = client.get_channel(914649594531553300)
+        err = client.get_channel(data.get("dump_channel"))
         await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}```")
 
 #On every message sent to server the following actions occur

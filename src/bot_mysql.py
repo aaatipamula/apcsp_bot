@@ -5,7 +5,7 @@ import json
 if __name__ != '__main__':
 
     os.chdir(__file__.strip('bot_mysql.py'))
-    data = json.load(open('ignore.json'))
+    data = json.load(open('data.json'))
 
     #Defining info to be pulled from MySQL database
     #Pulling all values from the BannedUser table and compiling in a list 
