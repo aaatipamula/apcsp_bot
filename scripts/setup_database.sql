@@ -1,7 +1,7 @@
 CREATE DATABASE Discord;
 
-CREATE USER 'python'@'localhost' IDENTIFIED BY 'Chb4ug8h#d';
-GRANT DELETE, UPDATE, INSERT, SELECT ON Discord.* TO 'python'@'localhost';
+CREATE USER 'python'@'%' IDENTIFIED BY 'Chb4ug8h#d';
+GRANT DELETE, UPDATE, INSERT, SELECT ON Discord.* TO 'python'@'%';
 FLUSH PRIVILEGES;
 
 USE Discord;

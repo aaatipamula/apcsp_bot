@@ -4,7 +4,7 @@ import json
 
 if __name__ != '__main__':
 
-    os.chdir(__file__.strip('apcsp_bot.py'))
+    os.chdir(__file__.strip('bot_mysql.py'))
     data = json.load(open('ignore.json'))
 
     #Defining info to be pulled from MySQL database
