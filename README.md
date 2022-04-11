@@ -54,18 +54,16 @@ You will have to manually set up the MySQL container by putting in a few command
 sudo docker exec -it bot-mysql bash
 ```
 
-You will be given the bash prompt for the container, run the following command to set up the SQL database:
+You will be given the bash prompt for the container, run the following command to set up the SQL database. The password for the MySQL image is defaulted to `Chb4ug8h#d`:
 
 ```
 mysql -uroot -p < /home/sql_script/setup_database.sql
 ```
-s
+
 You can exit the container by hitting `CTRL+D` or just typing `exit` into the Pesudo-TTY.
 
-From there you can start the bot up by running the following command:
+Finally you can start the bot up by running the following command:
 
 ```
 sudo docker exec -it -d bot python3 apcsp_bot/src/apcsp_bot.py &
 ```
-
-The password for the mysql image is defaulted to `Chb4ug8h#d`
