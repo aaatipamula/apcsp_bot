@@ -1,7 +1,6 @@
 import discord
 import random
 import time
-import os
 import json
 from discord.errors import NotFound
 import pytz
@@ -11,8 +10,7 @@ from discord import DMChannel
 from datetime import datetime as dt
 from bot_mysql import MySQL_Server as db
 
-os.chdir(__file__.strip('apcsp_bot.py'))
-data = json.load(open('data.json'))
+data = json.load(open('./data.json'))
 client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None)
 
 ban = "You are not allowed to use commands!"
