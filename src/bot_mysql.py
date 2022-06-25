@@ -9,7 +9,7 @@ if __name__ != '__main__':
 
         def __init__(self,):
 
-            self.mydb = sqlite3.connect('db.sqlite')
+            self.mydb = sqlite3.connect('./src/db.sqlite')
             self.cursor = self.mydb.cursor()
 
         def banned_user(self):

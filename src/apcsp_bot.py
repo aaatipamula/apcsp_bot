@@ -10,7 +10,7 @@ from discord import DMChannel
 from datetime import datetime as dt
 from bot_mysql import MySQL_Server as db
 
-data = json.load(open('data.json'))
+data = json.load(open('./src/data.json'))
 client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None)
 
 ban = "You are not allowed to use commands!"
