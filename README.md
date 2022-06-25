@@ -18,9 +18,6 @@ A bot that does a lot of useless stuff in Discord.
 This includes:
 - discord.py
 - pytz
-- mysql-connector-python
-
-
 
 ## Running This Project 
 
