@@ -1,6 +1,0 @@
-FROM mysql:latest as base
-
-ENV MYSQL_ROOT_PASSWORD=Chb4ug8h#d
-
-RUN mkdir /home/sql_script
-COPY scripts/setup_database.sql /home/sql_script

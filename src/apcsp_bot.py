@@ -10,7 +10,7 @@ from discord import DMChannel
 from datetime import datetime as dt
 from bot_mysql import MySQL_Server as db
 
-data = json.load(open('./data.json'))
+data = json.load(open('data.json'))
 client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None)
 
 ban = "You are not allowed to use commands!"
@@ -52,6 +52,7 @@ async def dm(ctx, arg1, arg2):
         await ctx.send(embed=dict.notfound)
         return
 
+# !! MAKE COMMAND MULTITHREADED !!
 #DMs user repeatedly the same message
 @client.command(pass_context=True)
 async def dmrep(ctx, arg1, arg2, arg3=2):

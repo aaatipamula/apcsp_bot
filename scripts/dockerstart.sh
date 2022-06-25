@@ -1,30 +1,16 @@
 #!/bin/sh
 
-if [ -f ./scripts/Dockerfile_apcsp_bot ]
+if [ -f ./scripts/Dockerfile ]
 then 
 
-    if [ -f ./scripts/Dockerfile_mysql ]
-        then
-            echo 'Building main docker container image...'
-            sudo docker build -t bot -f ./scripts/Dockerfile_apcsp_bot . 
+        echo 'Building main docker container image...'
+        sudo docker build -t bot -f ./scripts/Dockerfile . 
 
-            echo 'Building MySQL container image...'
-            sudo docker build -t bot-mysql -f ./scripts/Dockerfile_mysql .
-
-            echo 'Creating network...'
-            sudo docker network create bot-net
-
-            echo 'Starting containers...'
-            sudo docker run -it --name bot-mysql --network bot-net -d bot-mysql
-            sudo docker run -it --name bot --network bot-net -d bot
-            sudo docker cp ./src/data.json bot:/home/bot/apcsp_bot/src/
-        
-        else
-            echo 'Please navigate to the home directory of this project'
-            exit
-    exit
-    fi
-
+        echo 'Starting containers...'
+        sudo docker run -it --name bot -d bot
+        sudo docker cp ./src/data.json bot:/home/bot/apcsp_bot/src/
+        sudo docker cp ./src/db.sqlite bot:/home/bot/apcsp_bot/src/
+    
 else
     echo 'Please navigate to the home directory of this project'
     exit

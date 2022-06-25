@@ -1,8 +1,7 @@
-import os
 import json
-from tokenize import tabsize
+import sqlite3
 
-os.chdir(__file__.strip('setup.py'))
+# MAKE CHANGES TO SETUPFILE FOR SQLITE SUPPORT #
 
 def main():
     while True:
@@ -25,24 +24,30 @@ def main():
         except ValueError:
             print("\naPlease enter a valid channel id!\n")
 
-    host = input("\nPlease input a hostname for the MySQL server.\nIf you want the default hit enter to continue: ") or 'bot-mysql'
-    user = input("\nPlease input a user for the MySQL server.\nIf you want the default hit enter to continue: ") or 'python'
-    password = input("\nPlease input a password for the MySQL server.\nIf you want the default hit enter to continue: ") or'Chb4ug8h#d'
-
     token = input("\nPlease input your bot token: ")
 
+    connection = sqlite3.connect('./src/database/db.sqlite')
+    cursor = connection.cursor()
+
+    cursor.execute("CREATE TABLE AuthChannels(ChannelId bigint, Region varchar(3));")
+    cursor.execute("CREATE TABLE BannedUser(UserId bigint);")
+    cursor.execute("CREATE TABLE Busy(UserId bigint);")
+    cursor.execute("CREATE TABLE Working(UserId bigint);")
+    cursor.execute("CREATE TABLE UserInfo(UserId bigint,Name varchar(255));")
+
+    connection.commit()
+    connection.close() 
+    
     x = {
-        "host": host,
-        "user": user,
-        "password": password,
-        "database": 'Discord',
         "token": token,
         "owner": owner_id,
         "dump_channel": dump_channel
     }
 
-    with open('data.json', 'w') as f:
+    with open('~/.apcsp_bot/data.json', 'w') as f:
         f.write(json.dumps(x, indent=4))
+        
+    print('''Your data is saved in /src/data.json and can be edited if any of the previously input information is incorrect or needs to be updated!''')    
 
 if __name__ == '__main__':
     main()

@@ -1,11 +1,7 @@
-import mysql.connector
-import os
+import sqlite3
 import json
 
 if __name__ != '__main__':
-
-    os.chdir(__file__.strip('bot_mysql.py'))
-    data = json.load(open('data.json'))
 
     #Defining info to be pulled from MySQL database
     #Pulling all values from the BannedUser table and compiling in a list 
@@ -13,65 +9,46 @@ if __name__ != '__main__':
 
         def __init__(self,):
 
-            self.mydb = mysql.connector.connect(
-            host= data.get('host'),
-            user= data.get('user'),
-            password= data.get('password'),
-            database= data.get('database')
-            )
-
+            self.mydb = sqlite3.connect('db.sqlite')
             self.cursor = self.mydb.cursor()
 
         def banned_user(self):
-            list_a = []
+            
             self.cursor.execute("select * from BannedUser")
-            b = self.cursor.fetchall()
+            list_a = [x[0] for x in self.cursor.fetchall()]
 
-            for x in b:
-                list_a.append(x[0])
             return list_a
 
         #Pulling all values from the UserInfo table in the Name column and compiling in a list 
         def db_Name(self):
-            list_b = []
-            self.cursor.execute("select Name from UserInfo")
-            b = self.cursor.fetchall()
 
-            for x in b:
-                list_b.append(x[0])
+            self.cursor.execute("select Name from UserInfo")
+            list_b = [x[0] for x in self.cursor.fetchall()]
+            
             return list_b
 
         #Pulling all values from the UserInfo table in the UserId column and compiling in a list
         def db_UserId(self):
             
-            list_c = []
             self.cursor.execute("select UserId from UserInfo")
-            b = self.cursor.fetchall()
-
-            for x in b:
-                list_c.append(x[0])
+            list_c = [x[0] for x in self.cursor.fetchall()]
+            
             return list_c
 
         #Pulling all values from the Busy table in the UserId column and compiling in a list
         def db_Busy(self):
             
-            list_d = []
             self.cursor.execute("select UserId from Busy")
-            b = self.cursor.fetchall()
+            list_d = [x[0] for x in self.cursor.fetchall()]
 
-            for x in b:
-                list_d.append(x[0])
             return list_d
 
         #Pulling all values from the Working table in the UserId column and compiling in a list
         def db_Working(self):
             
-            list_e = []
             self.cursor.execute("select UserId from Working")
-            b = self.cursor.fetchall()
+            list_e = [x[0] for x in self.cursor.fetchall()]
 
-            for x in b:
-                list_e.append(x[0])
             return list_e
 
         #Pulling UserId based on Name stored in database
@@ -146,38 +123,39 @@ if __name__ != '__main__':
             self.cursor.execute(sql,val)
             self.mydb.commit()
 
+        #Deletes from the Authorized Channels table 
         def delete_authChannels(self, id):
             sql = f"delete from AuthChannels where ChannelId = {id}"
             self.cursor.execute(sql)
             self.mydb.commit()
 
+        #Updates from the Authorized Channels table
         def update_authChannels(self, region, id):
             sql = "update AuthChannels set Region = %s where ChannelId = %s"
             val = (region, id)
             self.cursor.execute(sql, val)
             self.mydb.commit()
 
+        #Pulls values from the Authorized Channels table based on Region
         def get_authChannels_region(self, Id):
             self.cursor.execute(f"select * from AuthChannels where ChannelId = '{Id}'")
             b = self.cursor.fetchone()
             return b[1]
 
+        #Selects all Channel Ids from AuthChannels and complies into a list
         def db_authChannels(self):
-            list_f = []
-            self.cursor.execute("select ChannelId from AuthChannels")
-            b = self.cursor.fetchall()
 
-            for x in b:
-                list_f.append(x[0])
+            self.cursor.execute("select ChannelId from AuthChannels")
+            list_f = [x[0] for x in self.cursor.fetchall()]
+
             return list_f
 
+        #Returns a list of all channel ids by region from the AuthChannels table
         def db_authChannels_byregion(self, region):
-            list_f = []
-            self.cursor.execute(f"select ChannelId from AuthChannels where Region = '{region}'")
-            b = self.cursor.fetchall()
 
-            for x in b:
-                list_f.append(x[0])
+            self.cursor.execute(f"select ChannelId from AuthChannels where Region = '{region}'")
+            list_f = [x[0] for x in self.cursor.fetchall()]
+
             return list_f
             
 else:

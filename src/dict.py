@@ -1,11 +1,9 @@
 import discord
 import json
-import os
 import random
 
 if __name__ != '__main__':
-
-    os.chdir(__file__.strip('dict.py'))
+    
     commands = json.load(open('commands.json'))
 
     #List of Emotes
