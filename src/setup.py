@@ -18,7 +18,7 @@ def main():
         owner_id = input("\nPlease input your Discord user-id: ")
 
         try:
-            owner_id = int(dump_channel)
+            owner_id = int(owner_id)
             break
         
         except ValueError:
@@ -26,7 +26,7 @@ def main():
 
     token = input("\nPlease input your bot token: ")
 
-    connection = sqlite3.connect('./src/database/db.sqlite')
+    connection = sqlite3.connect('./src/db.sqlite')
     cursor = connection.cursor()
 
     cursor.execute("CREATE TABLE AuthChannels(ChannelId bigint, Region varchar(3));")
@@ -44,10 +44,10 @@ def main():
         "dump_channel": dump_channel
     }
 
-    with open('~/.apcsp_bot/data.json', 'w') as f:
+    with open('./src/data.json', 'w') as f:
         f.write(json.dumps(x, indent=4))
         
-    print('''Your data is saved in /src/data.json and can be edited if any of the previously input information is incorrect or needs to be updated!''')    
+    print('''\nYour data is saved in /src/data.json and can be edited if any of the previously input information is incorrect or needs to be updated!''')    
 
 if __name__ == '__main__':
     main()
