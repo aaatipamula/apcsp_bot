@@ -53,92 +53,92 @@ if __name__ != '__main__':
 
         #Pulling UserId based on Name stored in database
         def get_UserId(self, name):
-            self.cursor.execute(f"select * from UserInfo where Name = '{name}'")
+            self.cursor.execute(f"select * from UserInfo where Name = \'{name}\'")
             b = self.cursor.fetchone()
             return b[0]
 
         #Pulling Name based on UserId stored in database
         def get_Name(self, Id):
-            self.cursor.execute(f"select * from UserInfo where UserId = '{Id}'")
+            self.cursor.execute(f"select * from UserInfo where UserId = \'{Id}\'")
             b = self.cursor.fetchone()
             return b[1]
 
         #Inserts info into UserInfo table
         def insert_UserInfo(self, usr, arg):
-            sql = "insert into UserInfo values (%s, %s)"
+            sql = "insert into UserInfo values (\'%s\', \'%s\')"
             val = (usr, arg)
             self.cursor.execute(sql, val)
             self.mydb.commit()
 
         #Inserts info into BannedUser table
         def insert_BannedUser(self, usr):
-            sql = "insert into BannedUser values (%s)"
+            sql = "insert into BannedUser values (\'%s\')"
             val = (usr,)
             self.cursor.execute(sql, val)
             self.mydb.commit()
 
         #Deletes info from BannedUser table
         def delete_BannedUser(self, usr):
-            sql = f"delete from BannedUser where UserId = {usr}"
+            sql = f"delete from BannedUser where UserId = \'{usr}\'"
             self.cursor.execute(sql)
             self.mydb.commit()
 
         #Updates name in UserInfo table
         def update_UserInfo(self, arg, usr):
-            sql = "update UserInfo set Name = %s where UserId = %s"
+            sql = "update UserInfo set Name = \'%s\' where UserId = \'%s\'"
             val = (arg, usr)
             self.cursor.execute(sql, val)
             self.mydb.commit()
 
         #inserts info into Working table
         def insert_Working(self, usr):
-            sql = "insert into Working values (%s)"
+            sql = "insert into Working values (\'%s\')"
             val = (usr,)
             self.cursor.execute(sql,val)
             self.mydb.commit()
 
         #Inserts info into Busy table
         def insert_Busy(self, usr):
-            sql = "insert into Busy values (%s)"
+            sql = "insert into Busy values (\'%s\')"
             val = (usr,)
             self.cursor.execute(sql,val)
             self.mydb.commit()
 
         #Deletes info from Working table
         def delete_Working(self, usr):
-            sql = f"delete from Working where UserId = {usr}"
+            sql = f"delete from Working where UserId = \'{usr}\'"
             self.cursor.execute(sql)
             self.mydb.commit()
 
         #Deletes info from Working table
         def delete_Busy(self, usr):
-            sql = f"delete from Busy where UserId = {usr}"
+            sql = f"delete from Busy where UserId = \'{usr}\'"
             self.cursor.execute(sql)
             self.mydb.commit()
 
         #Inserts into the Authorized Channels table
         def insert_authChannels(self, id, region):
-            sql = "insert into AuthChannels values (%s, %s)"
+            sql = "insert into AuthChannels values (\'%s\', \'%s\')"
             val = (id, region)
             self.cursor.execute(sql,val)
             self.mydb.commit()
 
         #Deletes from the Authorized Channels table 
         def delete_authChannels(self, id):
-            sql = f"delete from AuthChannels where ChannelId = {id}"
+            sql = f"delete from AuthChannels where ChannelId = \'{id}\'"
             self.cursor.execute(sql)
             self.mydb.commit()
 
         #Updates from the Authorized Channels table
         def update_authChannels(self, region, id):
-            sql = "update AuthChannels set Region = %s where ChannelId = %s"
+            sql = "update AuthChannels set Region = \'%s\' where ChannelId = \'%s\'"
             val = (region, id)
             self.cursor.execute(sql, val)
             self.mydb.commit()
 
         #Pulls values from the Authorized Channels table based on Region
         def get_authChannels_region(self, Id):
-            self.cursor.execute(f"select * from AuthChannels where ChannelId = '{Id}'")
+            self.cursor.execute(f"select * from AuthChannels where ChannelId = \'{Id}\'")
             b = self.cursor.fetchone()
             return b[1]
 
@@ -153,7 +153,7 @@ if __name__ != '__main__':
         #Returns a list of all channel ids by region from the AuthChannels table
         def db_authChannels_byregion(self, region):
 
-            self.cursor.execute(f"select ChannelId from AuthChannels where Region = '{region}'")
+            self.cursor.execute(f"select ChannelId from AuthChannels where Region = \'{region}\'")
             list_f = [x[0] for x in self.cursor.fetchall()]
 
             return list_f
