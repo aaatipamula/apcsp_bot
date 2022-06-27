@@ -65,14 +65,14 @@ if __name__ != '__main__':
 
         #Inserts info into UserInfo table
         def insert_UserInfo(self, usr, arg):
-            sql = "insert into UserInfo values (\'%s\', \'%s\')"
+            sql = "insert into UserInfo values (?, ?)"
             val = (usr, arg)
             self.cursor.execute(sql, val)
             self.mydb.commit()
 
         #Inserts info into BannedUser table
         def insert_BannedUser(self, usr):
-            sql = "insert into BannedUser values (\'%s\')"
+            sql = "insert into BannedUser values (?)"
             val = (usr,)
             self.cursor.execute(sql, val)
             self.mydb.commit()
@@ -85,21 +85,21 @@ if __name__ != '__main__':
 
         #Updates name in UserInfo table
         def update_UserInfo(self, arg, usr):
-            sql = "update UserInfo set Name = \'%s\' where UserId = \'%s\'"
+            sql = "update UserInfo set Name = ? where UserId = ?"
             val = (arg, usr)
             self.cursor.execute(sql, val)
             self.mydb.commit()
 
         #inserts info into Working table
         def insert_Working(self, usr):
-            sql = "insert into Working values (\'%s\')"
+            sql = "insert into Working values (?)"
             val = (usr,)
             self.cursor.execute(sql,val)
             self.mydb.commit()
 
         #Inserts info into Busy table
         def insert_Busy(self, usr):
-            sql = "insert into Busy values (\'%s\')"
+            sql = "insert into Busy values (?)"
             val = (usr,)
             self.cursor.execute(sql,val)
             self.mydb.commit()
@@ -118,7 +118,7 @@ if __name__ != '__main__':
 
         #Inserts into the Authorized Channels table
         def insert_authChannels(self, id, region):
-            sql = "insert into AuthChannels values (\'%s\', \'%s\')"
+            sql = "insert into AuthChannels values (?, ?)"
             val = (id, region)
             self.cursor.execute(sql,val)
             self.mydb.commit()
@@ -131,7 +131,7 @@ if __name__ != '__main__':
 
         #Updates from the Authorized Channels table
         def update_authChannels(self, region, id):
-            sql = "update AuthChannels set Region = \'%s\' where ChannelId = \'%s\'"
+            sql = "update AuthChannels set Region = ? where ChannelId = ?"
             val = (region, id)
             self.cursor.execute(sql, val)
             self.mydb.commit()
