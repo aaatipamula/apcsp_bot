@@ -1,8 +1,6 @@
 import json
 import sqlite3
 
-# MAKE CHANGES TO SETUPFILE FOR SQLITE SUPPORT #
-
 def main():
     while True:
         dump_channel = input("Please input the channel id you would like to send bot-message-dumps: ")
@@ -47,7 +45,7 @@ def main():
     with open('./src/data.json', 'w') as f:
         f.write(json.dumps(x, indent=4))
         
-    print('''\nYour data is saved in /src/data.json and can be edited if any of the previously input information is incorrect or needs to be updated!''')    
+    print('''\nYour data is saved in ./src/data.json and can be edited if any of the previously input information is incorrect or needs to be updated!''')    
 
 if __name__ == '__main__':
     main()
