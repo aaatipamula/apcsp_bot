@@ -2,6 +2,7 @@ import discord
 import random
 import time
 import json
+import traceback as tb
 from discord.errors import NotFound
 import pytz
 import dict
@@ -472,7 +473,7 @@ async def on_command_error(ctx, error):
     else:
         print(error)
         err = client.get_channel(data.get("dump_channel"))
-        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}```")
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 #On every message sent to server the following actions occur
 @client.event
