@@ -111,7 +111,8 @@ async def dmrep_error(ctx, error):
         await ctx.send("```Please enclose your message in quotes```")
 
     else:
-        print(error)
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 #Breaks while loop in dmrep function
 @client.command(pass_context=True)
@@ -153,6 +154,10 @@ async def addme_error(ctx, error):
 
         await ctx.send(msg)
 
+    else:
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
+
 #Adds the mentioned user's id to the database
 @client.command(pass_context=True)
 async def addusr(ctx, arg1, arg2):
@@ -185,6 +190,10 @@ async def addusr_error(ctx, error):
 
         await ctx.send(msg)
 
+    else: 
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
+
 #Adds user to blacklist
 @client.command(pass_context=True)
 async def cmdban(ctx, arg):
@@ -212,7 +221,8 @@ async def cmdban_error(ctx, error):
         await ctx.send(msg)
 
     else:
-        await ctx.send(f"```{error}```")
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 #Remove User from blacklist
 @client.command(pass_context=True)
@@ -241,7 +251,8 @@ async def cmduban_error(ctx, error):
         await ctx.send(msg)
 
     else:
-        await ctx.send(f"```{error}```")
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 #Sends the name of the user you mention
 @client.command(pass_context=True)
@@ -370,7 +381,8 @@ async def auth_error(ctx, error):
         await ctx.send(embed=dict.cmd_error("Please enter a valid region!\n\nCurrently supported regions are:\nCST (Central Standard Time *USA*)\nPST (Pacific Standard Time *USA*)\nEST (Eastern Standard Time *USA*)"))
 
     else:
-        await ctx.send(f"```{error}```")
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 #Removes authorization from a channel for code updates
 @client.command()
@@ -415,7 +427,8 @@ async def authtz_error(ctx, error):
         await ctx.send(embed=dict.cmd_error("Please enter a valid region!\n\nCurrently supported regions are:\nCST (Central Standard Time *USA*)\nPST (Pacific Standard Time *USA*)\nEST (Eastern Standard Time *USA*)"))
 
     else:
-        await ctx.send(f"```{error}```")
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 @client.command()
 async def update(ctx, version, notes):
@@ -462,7 +475,8 @@ async def update_error(ctx, error):
         await ctx.send(msg)
 
     else:
-        await ctx.send(f"```{error}```")
+        err = client.get_channel(data.get("dump_channel"))
+        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 #General error handling on commands
 @client.event
