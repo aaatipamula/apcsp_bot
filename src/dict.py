@@ -4,7 +4,7 @@ import random
 
 if __name__ != '__main__':
     
-    commands = json.load(open('./src/commands.json'))
+    commands = json.load(open('commands.json'))
 
     #List of Emotes
     random_emote = ["<a:yay:794447927820419082>", 

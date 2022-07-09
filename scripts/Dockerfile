@@ -1,14 +1,10 @@
 FROM alpine:latest as base
 
-RUN mkdir /home/bot/
-WORKDIR /home/bot/ 
+WORKDIR /home/bot/apcsp_bot 
 
 RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
-RUN python3 -m pip install discord.py pytz
+RUN pip3 install --no-cache discord.py pytz
 
-RUN apk add git
-
-RUN git clone https://github.com/aaatipamula/apcsp_bot.git
-WORKDIR /home/bot/apcsp_bot/
+COPY src .
