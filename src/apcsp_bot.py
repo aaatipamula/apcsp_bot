@@ -1,3 +1,4 @@
+from http.client import HTTPException
 import discord
 import random
 import time
@@ -10,6 +11,7 @@ from discord.ext import commands
 from discord import DMChannel
 from datetime import datetime as dt
 from bot_mysql import MySQL_Server as db
+import typing
 
 data = json.load(open('data.json'))
 client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None)
@@ -33,86 +35,72 @@ async def banned_user(ctx):
 
 #DMs specific user a message
 @client.command(pass_context=True)
-async def dm(ctx, arg1, arg2):
+async def dm(ctx, user, *message):
+
+    msg = ' '.join(message)
 
     await banned_user(ctx)
 
     if ctx.message.mentions:
         uid = str(ctx.message.raw_mentions[0])
         user = await client.fetch_user(uid)
-        await DMChannel.send(user, arg2)
-        await ctx.send(embed=dict.dm_embed("Message sent!", ctx.message.mentions[0], arg2))
+        await DMChannel.send(user, msg)
+        await ctx.send(embed=dict.dm_embed("Message sent!", ctx.message.mentions[0], msg))
 
-    elif arg1 in db().db_Name(): 
-        uid = str(db().get_UserId(arg1))
+    elif user in db().db_Name(): 
+        uid = str(db().get_UserId(user))
         user = await client.fetch_user(uid)
-        await DMChannel.send(user, arg2)
-        await ctx.send(embed=dict.dm_embed("Message sent!", arg1, arg2))
+        await DMChannel.send(user, msg)
+        await ctx.send(embed=dict.dm_embed("Message sent!", user, msg))
 
     else:
         await ctx.send(embed=dict.notfound)
         return
 
-# !! MAKE COMMAND MULTITHREADED !!
 #DMs user repeatedly the same message
 @client.command(pass_context=True)
-async def dmrep(ctx, arg1, arg2, arg3=2):
+async def dmrep(ctx, user, arg3: typing.Optional[float] = 2, *message):
 
     await banned_user(ctx)
 
-    int(arg3)
+    msg = ' '.join(message)
+
+    if msg == '':
+        await ctx.send(embed=dict.cmd_error('Missing *message* argument.'))
+        return
 
     if arg3 < 1:
         await ctx.send(embed=dict.cmd_error("Please enter a value more than 1, wait time interval has to be more than 1"))
+        return
 
     if ctx.message.mentions:
         global on 
         on = True
         uid = str(ctx.message.raw_mentions[0])
         user = await client.fetch_user(uid)
-        await ctx.send(embed=dict.dm_embed("Repeating Message!", ctx.message.mentions[0], arg2))
+        await ctx.send(embed=dict.dm_embed("Repeating Message!", ctx.message.mentions[0], msg))
 
         while on == True:
             time.sleep(arg3)
-            await DMChannel.send(user, arg2)
+            await DMChannel.send(user, msg)
             if on == False:
                 break
 
-    elif arg1 in db().db_Name():
+    elif user in db().db_Name():
         on = True
-        uid = db().get_UserId(arg1)
+        uid = db().get_UserId(user)
         user = await client.fetch_user(uid)
-        await ctx.send(embed=dict.dm_embed("Repeating Message!", arg1, arg2))
+        await ctx.send(embed=dict.dm_embed("Repeating Message!", user, msg))
 
         while on == True:
             time.sleep(arg3)
-            await DMChannel.send(user, arg2)
+            await DMChannel.send(user, msg)
             if on == False:
                 break
 
     else:
         await ctx.send(embed=dict.cmd_error("User not found!"))
         return
-
-#Error handing specifically for dmrep command
-@dmrep.error
-async def dmrep_error(ctx, error):
-
-    if isinstance(error, commands.MissingRequiredArgument):
-        if str(error).startswith("arg1"):
-            msg = "```*user* is a required argument that is missing.```"
-
-        elif str(error).startswith("arg2"):
-            msg = "```*message* is a required argument that is missing.```"
-
-        await ctx.send(msg)
-
-    if isinstance(error, commands.ExpectedClosingQuoteError):
-        await ctx.send("```Please enclose your message in quotes```")
-
-    else:
-        err = client.get_channel(data.get("dump_channel"))
-        await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
 #Breaks while loop in dmrep function
 @client.command(pass_context=True)
@@ -126,7 +114,7 @@ async def stop(ctx):
 
 #Adds the author's id to the database
 @client.command(pass_context=True)
-async def addme(ctx, arg):
+async def addme(ctx, name):
 
     usr = ctx.author.id
 
@@ -141,18 +129,15 @@ async def addme(ctx, arg):
         return
 
     else:
-        db().insert_UserInfo(usr, arg)
-        await ctx.send(embed=dict.embed_a("Success!", f"{arg} was added to the database successfully!"))
+        db().insert_UserInfo(usr, name)
+        await ctx.send(embed=dict.embed_a("Success!", f"{name} was added to the database successfully!"))
 
 #Error handing specifically for addme command
 @addme.error
 async def addme_error(ctx, error):
 
     if isinstance(error, commands.MissingRequiredArgument):
-        if str(error).startswith("arg"):
-            msg = "```*name* is a required argument that is missing.```"
-
-        await ctx.send(msg)
+        await ctx.send(error)
 
     else:
         err = client.get_channel(data.get("dump_channel"))
@@ -160,7 +145,7 @@ async def addme_error(ctx, error):
 
 #Adds the mentioned user's id to the database
 @client.command(pass_context=True)
-async def addusr(ctx, arg1, arg2):
+async def addusr(ctx, user, name):
 
     usr = ctx.message.raw_mentions[0]
 
@@ -171,8 +156,8 @@ async def addusr(ctx, arg1, arg2):
         return
 
     elif ctx.message.mentions:
-        db().insert_UserInfo(usr, arg2)
-        await ctx.send(embed=dict.embed_a("Success!", f"{arg2} was added to the database successfully!"))
+        db().insert_UserInfo(usr, name)
+        await ctx.send(embed=dict.embed_a("Success!", f"{name} was added to the database successfully!"))
 
     else:
         await ctx.send(embed=dict.cmd_error("Please mention the user you would like to add first!"))
@@ -182,13 +167,7 @@ async def addusr(ctx, arg1, arg2):
 async def addusr_error(ctx, error):
 
     if isinstance(error, commands.MissingRequiredArgument):
-        if str(error).startswith("arg1"):
-            msg = "```*user* is a required argument that is missing.```"
-
-        elif str(error).startswith("arg2"):
-            msg = "```*name* is a required argument that is missing.```"
-
-        await ctx.send(msg)
+        await ctx.send(error)
 
     else: 
         err = client.get_channel(data.get("dump_channel"))
@@ -196,7 +175,7 @@ async def addusr_error(ctx, error):
 
 #Adds user to blacklist
 @client.command(pass_context=True)
-async def cmdban(ctx, arg):
+async def cmdban(ctx, user):
 
     usr = ctx.message.raw_mentions[0]
 
@@ -215,10 +194,7 @@ async def cmdban(ctx, arg):
 async def cmdban_error(ctx, error):
 
     if isinstance(error, commands.MissingRequiredArgument):
-        if str(error).startswith("arg"):
-            msg = "```*user* is a required argument that is missing.```"
-
-        await ctx.send(msg)
+        await ctx.send(error)
 
     else:
         err = client.get_channel(data.get("dump_channel"))
@@ -226,11 +202,14 @@ async def cmdban_error(ctx, error):
 
 #Remove User from blacklist
 @client.command(pass_context=True)
-async def cmduban(ctx, arg):
+async def cmduban(ctx, user :str):
 
     usr = ctx.message.raw_mentions[0]
 
     await banned_user(ctx)
+
+    if user.startswith('<@') == False:
+        await ctx.send(embed=dict.cmd_error('Please mention the use you would like banned!'))
 
     if usr in db().banned_user():
         db().delete_BannedUser(usr)
@@ -256,11 +235,14 @@ async def cmduban_error(ctx, error):
 
 #Sends the name of the user you mention
 @client.command(pass_context=True)
-async def info(ctx, arg):
+async def info(ctx, user):
 
     usr = ctx.message.raw_mentions[0]
 
     await banned_user(ctx)
+
+    if user.startswith('<@') == False:
+        await ctx.send(embed=dict.cmd_error('Please mention the use you would like banned!'))
 
     if usr in db().db_UserId():
         await ctx.send(embed=dict.info_embed(ctx.message.mentions[0], db().get_Name(usr)))
@@ -270,9 +252,11 @@ async def info(ctx, arg):
 
 #Edits your name in the database
 @client.command(pass_context=True)
-async def editname(ctx, arg):
+async def editname(ctx, name):
 
     usr = ctx.message.author.id
+
+    await banned_user(ctx)
 
     if ctx.message.author.id in db().banned_user():
         await ctx.send(embed=dict.cmd_error(ban))
@@ -283,8 +267,8 @@ async def editname(ctx, arg):
 
     elif usr in db().db_UserId():
         name1 = db().get_Name(usr)
-        db().update_UserInfo(arg, usr)
-        await ctx.send(embed=dict.embed_a("Success!", f"Your name was changed from {name1} to {arg}"))
+        db().update_UserInfo(name, usr)
+        await ctx.send(embed=dict.embed_a("Success!", f"Your name was changed from {name1} to {name}"))
 
     else:
         await ctx.send(embed=dict.cmd_error("User is not in database!"))
@@ -302,18 +286,20 @@ async def ping(ctx):
 @client.command()
 async def working(ctx):
 
-    auth_id = ctx.author.id
+    usr = ctx.author.id
 
-    if auth_id in db().banned_user():
+    await banned_user(ctx)
+
+    if usr in db().banned_user():
         await ctx.send(embed=dict.cmd_error(ban))
         return
 
-    elif auth_id in db().db_Working():
-        db().delete_Working(auth_id)
+    elif usr in db().db_Working():
+        db().delete_Working(usr)
         await ctx.send(embed=dict.embed_b("Not working! <a:yay:794447927820419082>"))
 
     else:
-        db().insert_Working(auth_id)
+        db().insert_Working(usr)
         await ctx.send(embed=dict.work_embed(ctx.author))
         
 #Switch statement that defines if working or not
@@ -388,6 +374,8 @@ async def auth_error(ctx, error):
 @client.command()
 async def rmauth(ctx):
 
+    usr = ctx.author.id
+
     await banned_user(ctx)
 
     if ctx.message.channel.id in db().db_authChannels():
@@ -447,19 +435,19 @@ async def update(ctx, version, notes):
         channel = client.get_channel(x)
         await channel.send(f"```Version: {version}\nAuthor: Duren\nDate: {pacific.strftime('%b-%d-%Y %I:%M:%S %p')}\n\nNotes: {notes}```")
         with open(__file__, "rb") as f:
-            await channel.send(file=discord.File(f, "apcsp_main.py"))
+            await channel.send(file=discord.File(f, "apcsp_bot.py"))
 
     for x in db().db_authChannels_byregion("cst"):
         channel = client.get_channel(x)
         await channel.send(f"```Version: {version}\nAuthor: Duren\nDate: {central.strftime('%b-%d-%Y %I:%M:%S %p')}\n\nNotes: {notes}```")
         with open(__file__, "rb") as f:
-            await channel.send(file=discord.File(f, "apcsp_main.py"))
+            await channel.send(file=discord.File(f, "apcsp_bot.py"))
 
     for x in db().db_authChannels_byregion("est"):
         channel = client.get_channel(x)
         await channel.send(f"```Version: {version}\nAuthor: Duren\nDate: {eastern.strftime('%b-%d-%Y %I:%M:%S %p')}\n\nNotes: {notes}```")
         with open(__file__, "rb") as f:
-            await channel.send(file=discord.File(f, "apcsp_main.py"))
+            await channel.send(file=discord.File(f, "apcsp_bot.py"))
 
 #Error handing specifically for authtz command
 @update.error
