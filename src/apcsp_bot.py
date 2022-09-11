@@ -1,10 +1,9 @@
-#!/usr/bin/python3
-
 import discord
 import random
 import time
 import pytz
 import dict
+import logging
 import traceback as tb
 from discord.errors import NotFound
 from discord.ext import commands
@@ -17,6 +16,9 @@ from data import data, lists
 #Declaring gateway intents, discord.py >= 2.0 feature
 intent = discord.Intents().default()
 intent.message_content = True
+
+#Logging
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 
 #Initalizing client object
 client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None, intents=intent)
@@ -513,4 +515,4 @@ async def on_message(message):
     #process any commands before on message event is processed
     await client.process_commands(message)
 
-client.run(data.get('token'))
+client.run(data.get('token'), log_handler=handler)
