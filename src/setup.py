@@ -1,3 +1,4 @@
+import os
 import json
 import sqlite3
 
@@ -48,7 +49,15 @@ def main():
     print('''\nYour data is saved in ./src/data.json and can be edited if any of the previously input information is incorrect or needs to be updated!''')    
 
 if __name__ == '__main__':
-    main()
+    directory = os.listdir()
+
+    if 'src' in directory and 'scripts' in directory:
+        try:
+            main()
+        except KeyboardInterrupt:
+            print("Exited.\n")
+    else:
+        print("Please run this file in the root directory of the project!")
 
 else:
     Exception("Please run this file as the main, do not import!")
