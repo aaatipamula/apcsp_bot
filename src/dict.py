@@ -1,8 +1,6 @@
 import discord
-import json
 import random
 from data import commands
-from discord.ext import commands
 
 if __name__ != '__main__':
 
