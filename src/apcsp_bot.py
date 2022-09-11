@@ -1,20 +1,23 @@
-from http.client import HTTPException
 import discord
 import random
 import time
-import json
-import traceback as tb
-from discord.errors import NotFound
 import pytz
 import dict
+import traceback as tb
+from discord.errors import NotFound
 from discord.ext import commands
 from discord import DMChannel
 from datetime import datetime as dt
-from bot_mysql import MySQL_Server as db
+from bot_sql import SQL_Server as db
 import typing
+from data import data, lists
 
-data = json.load(open('data.json'))
-client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None)
+#Declaring gateway intents, discord.py >= 2.0 feature
+intent = discord.Intents().default()
+intent.message_content = True
+
+#Initalizing client object
+client = commands.Bot(command_prefix = ".",  case_insensitive= True, help_command= None, intents=intent)
 
 ban = "You are not allowed to use commands!"
 
@@ -54,7 +57,7 @@ async def dm(ctx, user, *message):
         await ctx.send(embed=dict.dm_embed("Message sent!", user, msg))
 
     else:
-        await ctx.send(embed=dict.notfound)
+        await ctx.send(embed=dict.cmd_error("User not found!"))
         return
 
 #DMs user repeatedly the same message
@@ -110,7 +113,7 @@ async def stop(ctx):
 
     global on
     on = False
-    await ctx.send(embed=dict.embed_a("Stopped sending message!", random.choice(dict.stop_msg)))
+    await ctx.send(embed=dict.embed_a("Stopped sending message!", random.choice(lists["stop_message"])))
 
 #Adds the author's id to the database
 @client.command(pass_context=True)
@@ -327,10 +330,10 @@ async def compliment(ctx):
     await banned_user(ctx)
 
     if ctx.message.mentions:
-        await ctx.send(random.choice(dict.general_compliment))
+        await ctx.send(random.choice(lists["compliments"]))
 
     else:
-        await ctx.send(random.choice(dict.general_compliment))
+        await ctx.send(random.choice(lists["compliments"]))
 
 #Sends embed of commands that describe function of each command has optional arguments
 @client.command()
@@ -466,6 +469,10 @@ async def update_error(ctx, error):
         err = client.get_channel(data.get("dump_channel"))
         await err.send(f"```Error: {error}\nMessage: {ctx.message.content}\nAuthor: {ctx.author}\nServer: {ctx.message.guild}\nLink: {ctx.message.jump_url}\nTraceback: {''.join(tb.format_exception(None, error, error.__traceback__))}```")
 
+@client.command()
+async def poke(ctx):
+    await ctx.send(random.choice(lists["emoticon"]))
+
 #General error handling on commands
 @client.event
 async def on_command_error(ctx, error):
@@ -499,7 +506,7 @@ async def on_message(message):
 
     #Sends a happy birthday message if "happy birthday" is in message
     elif "happy birthday" in message.content.lower():
-        await message.channel.send(f"happy birthday!! {random.choice(dict.random_emote)}")
+        await message.channel.send(f"happy birthday!! {random.choice(lists['emotes'])}")
         
     #process any commands before on message event is processed
     await client.process_commands(message)
